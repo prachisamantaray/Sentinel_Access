@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}My Profile - SentinelAccess{% endblock %}
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-person-badge"></i> My Profile</h4>
+
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card border-secondary-subtle">
+      <div class="card-header">Account Details</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-5">Username</dt><dd class="col-7">{{ user.username }}</dd>
+          <dt class="col-5">Role</dt><dd class="col-7"><span class="badge text-bg-secondary text-uppercase">{{ user.role }}</span></dd>
+          <dt class="col-5">Typical IP</dt><dd class="col-7">{{ user.typical_ip or '-' }}</dd>
+          <dt class="col-5">Typical Location</dt><dd class="col-7">{{ user.typical_location or '-' }}</dd>
+          <dt class="col-5">Normal Hours</dt>
+          <dd class="col-7">
+            {% if user.typical_login_hours %}{{ user.typical_login_hours[0] }}:00 - {{ user.typical_login_hours[1] }}:00{% else %}-{% endif %}
+          </dd>
+          <dt class="col-5">MFA Enrolled</dt>
+          <dd class="col-7">
+            {% if user.mfa_enrolled %}<span class="badge text-bg-success">Yes</span>
+            {% else %}<span class="badge text-bg-secondary">No</span>{% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card border-secondary-subtle">
+      <div class="card-header">My Recent Login History</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0 align-middle">
+          <thead><tr><th>Time</th><th>IP</th><th>Result</th></tr></thead>
+          <tbody>
+            {% for a in attempts %}
+            <tr>
+              <td class="small">{{ a.timestamp | datetimeformat }}</td>
+              <td>{{ a.ip }}</td>
+              <td>
+                {% if a.result == 'allowed' %}<span class="badge text-bg-success">Allowed</span>
+                {% elif a.result == 'mfa_required' %}<span class="badge text-bg-warning text-dark">MFA Required</span>
+                {% elif a.result == 'blocked' %}<span class="badge text-bg-danger">Blocked</span>
+                {% else %}<span class="badge text-bg-secondary">{{ a.result }}</span>{% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-center text-secondary py-3">No login history yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

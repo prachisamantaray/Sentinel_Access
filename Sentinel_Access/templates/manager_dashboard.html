@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Manager Dashboard - SentinelAccess{% endblock %}
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-people"></i> Manager Dashboard</h4>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">Team Size</div>
+      <div class="fs-3 fw-semibold">{{ report.team_size }}</div>
+    </div></div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">Blocked Team Members</div>
+      <div class="fs-3 fw-semibold text-danger">{{ report.blocked_count }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="card border-secondary-subtle">
+  <div class="card-header">Team Roster</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0 align-middle">
+      <thead><tr><th>Username</th><th>Typical Location</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for e in roster %}
+        <tr>
+          <td>{{ e.username }}</td>
+          <td>{{ e.typical_location or '-' }}</td>
+          <td>
+            {% if e.is_blocked %}<span class="badge text-bg-danger">Blocked</span>
+            {% else %}<span class="badge text-bg-success">Active</span>{% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-secondary py-3">No team members found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="text-secondary small mt-3">Security logs and risk scores are restricted to Admin accounts.</p>
+{% endblock %}

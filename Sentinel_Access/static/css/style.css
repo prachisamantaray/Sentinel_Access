@@ -1,0 +1,28 @@
+body {
+  background-color: #10141a;
+}
+
+.card {
+  background-color: #171c25;
+}
+
+.navbar-brand i {
+  vertical-align: -1px;
+}
+
+.risk-low {
+  background-color: rgba(25, 135, 84, 0.15) !important;
+}
+
+.risk-medium {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+}
+
+.risk-high {
+  background-color: rgba(220, 53, 69, 0.18) !important;
+}
+
+.table-responsive {
+  max-height: 60vh;
+  overflow-y: auto;
+}

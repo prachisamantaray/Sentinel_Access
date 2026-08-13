@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - SentinelAccess{% endblock %}
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h4>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">Total Users</div>
+      <div class="fs-3 fw-semibold">{{ stats.total_users }}</div>
+    </div></div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">Blocked Users</div>
+      <div class="fs-3 fw-semibold text-danger">{{ stats.blocked_users }}</div>
+    </div></div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">Login Attempts (24h)</div>
+      <div class="fs-3 fw-semibold">{{ stats.attempts_24h }}</div>
+    </div></div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-secondary-subtle"><div class="card-body">
+      <div class="text-secondary small">High-Risk Alerts (24h)</div>
+      <div class="fs-3 fw-semibold text-warning">{{ stats.alerts_24h }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <a href="{{ url_for('admin.security') }}" class="card text-decoration-none border-info-subtle h-100">
+      <div class="card-body">
+        <h6 class="card-title text-info"><i class="bi bi-graph-up-arrow"></i> Security Dashboard</h6>
+        <p class="card-text text-secondary small mb-0">Live login log, risk scores, and color-coded alerts.</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6">
+    <a href="{{ url_for('admin.users') }}" class="card text-decoration-none border-info-subtle h-100">
+      <div class="card-body">
+        <h6 class="card-title text-info"><i class="bi bi-people-fill"></i> Manage Users</h6>
+        <p class="card-text text-secondary small mb-0">View accounts, block or unblock users.</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="card border-secondary-subtle">
+  <div class="card-header">Recent High-Risk Alerts (blocked logins, last 24h)</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0 align-middle">
+      <thead><tr><th>User</th><th>IP</th><th>Location</th><th>Risk Score</th><th>Signals</th><th>Time</th></tr></thead>
+      <tbody>
+        {% for a in recent_alerts %}
+        <tr>
+          <td>{{ a.user_id }}</td>
+          <td>{{ a.ip }}</td>
+          <td>{{ (a.location or {}).get('label', '-') }}</td>
+          <td><span class="badge text-bg-danger">{{ a.risk_score }}</span></td>
+          <td class="small text-secondary">{{ (a.risk_signals_triggered or []) | join(', ') }}</td>
+          <td class="small">{{ a.timestamp | datetimeformat }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-secondary py-3">No high-risk alerts in the last 24 hours.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
